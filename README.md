@@ -1,2 +1,1 @@
-# via-mobilenet
-Detecting If You Are Slouching or Not using AI with Mobilenet
+based on the excelent tensorflow.js and this example in particular https://js.tensorflow.org/tutorials/webcam-transfer-learning.html

@@ -1,0 +1,163 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- include getmdl -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+
+<link rel="stylesheet" href="css/styles.css">
+
+
+<div id="aiClassesUI"></div>
+
+
+<div class="demo-layout mdl-layout mdl-layout--fixed-header mdl-js-layout">
+        <!-- <div class="mdl-layout__container"> -->
+        <header class="demo-header mdl-layout__header mdl-layout__header--scroll">
+                <div class="mdl-layout__header-row">
+                        <span class="mdl-layout-title">
+                                Sit Up Straight with AI
+                                <br/>
+                                <span style='font-size: small'>
+                                        Using AI for a better posture at your desk
+                                </span>
+                        </span>
+                        <!-- Add spacer, to align navigation to the right -->
+                        <div class="mdl-layout-spacer"></div>
+                        <!-- Navigation -->
+                        <nav class="mdl-navigation">
+                                
+                                <a href='https://medium.com/p/135b635bd38e' target="_blank" rel="noopener" class="mdl-navigation__link">Blog Post</a>
+                                <a href='https://github.com/SlouchingOrNot/slouching-or-not-mobilenet' target="_blank" rel="noopener" class="mdl-navigation__link">Github</a>
+                                <a href='https://twitter.com/jerome_etienne' target="_blank" rel="noopener" class="mdl-navigation__link">Made with ❤️ by @jerome_etienne</a>
+                        </nav>
+                </div>
+        </header>
+        <main class="demo-main mdl-layout__content">
+                <!-- <main class="mdl-layout__content"> -->
+                <div class="demo-container mdl-grid">
+                        <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+                        <div class="demo-content content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+                                <div class="mdl-grid">
+                                        <div class="mdl-cell mdl-cell--8-col">
+                                                <video autoplay playsinline muted id="webcam" width="224" height="224"></video>
+                                        </div>
+                                        <div class="mdl-cell mdl-cell--4-col" style='position: relative'>
+                                                <div id="ui-prediction">
+                                                        <button id='ui-prediction-start' class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Start</button>                                        
+                                                        App <span id='ui-app-state'>Loading</span>
+                                                </div>
+                                                
+                                                <div style='text-align: center;position: absolute;bottom: 0;font-size: large;width: 100%;'>
+                                                        <span id='ui-prediction-bestclass' style='font-size: 50; text-transform: uppercase;'></span>
+                                                </div>
+                                        </div>
+                                </div>
+                                <hr/>
+                                <div id="data-collection-ui">
+                                        
+                                        <div class="mdl-grid mdl-grid--no-spacing">
+                                                <div id="ui-data-collection-good" style='text-align: center; position: relative;' class="mdl-cell mdl-cell--4-col mdl-cell--middle">
+                                                        <button style='position: absolute; top: 10px;right: 40px;' class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                                                <i class="material-icons">add</i>
+                                                        </button>
+                                                        <h5>Good</h5>
+                                                        <canvas width=224 height=224 style='width:160px; height:160px; transform: scaleX(-1);'></canvas>
+                                                        <div>
+                                                                <span class="numExamples">0</span> samples
+                                                                -
+                                                                Result: <span id='ui-prediction-good'>0</span>%
+                                                        </div>
+                                                </div>
+                                                <div id="ui-data-collection-bad" style='text-align: center; position: relative;' class="mdl-cell mdl-cell--4-col mdl-cell--middle">
+                                                        <button style='position: absolute; top: 10px;right: 40px;' class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                                                <i class="material-icons">add</i>
+                                                        </button>
+                                                        <h5>Bad</h5>
+                                                        <canvas width=224 height=224 style='width:160px; height:160px; transform: scaleX(-1);'></canvas>
+                                                        <div>
+                                                                <span class="numExamples">0</span> samples
+                                                                -
+                                                                Result: <span id='ui-prediction-bad'>0</span>%
+                                                        </div>
+                                                </div>
+                                                <div id="ui-data-collection-ignore" style='text-align: center; position: relative;' class="mdl-cell mdl-cell--4-col mdl-cell--middle">
+                                                        <button style='position: absolute; top: 10px;right: 40px;' class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                                                <i class="material-icons">add</i>
+                                                        </button>
+                                                        <h5>Ignore</h5>
+                                                        <canvas width=224 height=224 style='width:160px; height:160px; transform: scaleX(-1);'></canvas>
+                                                        <div>
+                                                                <span class="numExamples">0</span> samples
+                                                                -
+                                                                Result: <span id='ui-prediction-ignore'>0</span>%
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        
+                                        <br/>
+                                        <br/>
+                                        <div style='text-align:center'>
+                                                <button id='ui-data-collection-clear' class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" title='delete all samples'
+                                                style='float: right;'>
+                                                <i class="material-icons">delete</i>
+                                        </button>
+                                        <div style='float: left; text-align:left;'>
+                                                Epoch: <span id='ui-data-collection-epoch-index'>n-a</span> / <span id='ui-data-collection-epoch-count'>n-a</span>
+                                                <br/>
+                                                Loss: <span id='ui-data-collection-loss'>n-a</span>
+                                        </div>
+                                        <button id='ui-data-collection-train' class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Train Model</button>
+                                </div>
+                        </div>
+                        
+                        <hr/>
+                        <div id="ui-model-io">
+                                <h5>Stored Model: <span id='ui-model-stored'>no</span> / 
+                                <button id='ui-model-save' disabled 
+                                class="mdl-button mdl-js-button mdl-button--colored" title='Save AI Model in IndexDB'>
+                                Save
+                        </button>
+                        <button id='ui-model-load' disabled 
+                                class="mdl-button mdl-js-button mdl-button--colored" 
+                                title='Load AI Model from IndexDB'>
+                                Load
+                        </button>
+                        <button id='ui-model-delete' disabled 
+                                class="mdl-button mdl-js-button mdl-button--colored" 
+                                title='Delete AI Model in IndexDB'>
+                                Delete
+                        </button>
+                        </h5>
+</div>
+</div>
+</div>
+<footer class="demo-footer mdl-mini-footer">
+        <div class="mdl-mini-footer--left-section">
+                <ul class="mdl-mini-footer--link-list">
+                        <li>Made with love by <a href="https://twitter.com/jerome_etienne/" rel="noopener" target='_blank'>@jerome_etienne</a></li>
+                </ul>
+                <ul class="mdl-mini-footer--link-list">
+                        <li>Thanks to <a href="https://js.tensorflow.org/" rel="noopener" target='_blank'>tensorflow.js</a></li>
+                </ul>
+        </div>
+</footer>
+</div>
+</main>
+
+<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+</div>
+
+</div>
+
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+<!-- Load TensorFlow.js. This is required to use MobileNet. -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"> </script>
+
+
+<script src='js/webcam.js'></script>
+<script src='js/controller_dataset.js'></script>
+<script src='js/utils.js'></script>
+<script src='js/main.js'></script>
